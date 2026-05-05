@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import {connectDb} from "../db/db";
+import connectDb from "../db/db";
 
 export const metadata: Metadata = {
   title: "Create Next App",
