@@ -1,6 +1,7 @@
 'use client';
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,7 +11,7 @@ export default function LoginForm() {
   };
   return (
     <div className="h-screen flex flex-col flex-1 items-center justify-center bg-blue-50 font-sans">
-      <form className="flex flex-col gap-3 bg-white p-8 w-full max-w-[450px] rounded-2xl font-sans mx-4">
+      <form className="flex flex-col gap-3 bg-white p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4">
         <h1 className="font-bold text-3xl mb-4">Login</h1>
         {/* Email */}
         <div className="flex flex-col">
@@ -72,16 +73,16 @@ export default function LoginForm() {
         </div>
 
         {/* Submit */}
-        <button className="mt-5 mb-2 bg-[#151717] text-white text-sm font-medium rounded-lg h-[50px] w-full hover:bg-[#252727] transition">
+        <button className="mt-5 mb-2 bg-[#151717] text-white text-sm font-medium rounded-lg h-12.5 w-full hover:bg-[#252727] transition">
           Login
         </button>
 
         {/* Footer */}
         <p className="text-center text-sm">
           Don't have an account?{" "}
-          <span className="text-blue-500 font-medium cursor-pointer">
+          <Link href="/auth/signup" className="text-blue-500 font-medium cursor-pointer">
             Sign Up
-          </span>
+          </Link>
         </p>
       </form>
     </div>

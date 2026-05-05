@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 // Connect to MongoDB
 export default function connectDb(): void {
-    const uri = process.env.MONGO_DB_URI;
+    const uri = process.env.MONGO_DB_URI
     mongoose.connect(uri!)
     .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Could not connect to MongoDB', err));
+    .catch(err => console.error('Could not connect to MongoDB', err))
 }
