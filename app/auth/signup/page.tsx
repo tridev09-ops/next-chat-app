@@ -2,64 +2,32 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { signup } from "@/app/lib/actions";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleForm =()=>{
-    // const jwtSecret = process.env.JWT_SECRET
-    // const {
-    //     name,
-    //     email,
-    //     password
-    // } = req.body
-
-    // const userData = await User.find( {
-    //     email: email
-    // })
-
-    // if (userData[0]) {
-    //     return res.send(`User with email ${email} already exists`)
-    // }
-    // /*
-    // const saltRounds =10
-    // let hashedPassword
-    // bcrypt.hash(plainPassword, saltRounds, (err, hash) => {
-    //     if (err) {
-    //         console.log(err.message)
-    //     } else {
-    //         console.log('Hashed password:', hash);
-    //         hashedPassword=hash
-    //     }
-    // });
-    // */
-    // const user = new User( {
-    //     name: name,
-    //     email: email,
-    //     password: password //hashedPassword
-    // })
-    // const result = await user.save()
-
-    // const jwtToken = jwt.sign({
-    //     name: name,
-    //     email: email,
-    // }, jwtSecret, {
-    //     expiresIn: '10d'
-    // })
-
-    // res.cookie('jwtToken', jwtToken, {
-    //     httpOnly: true,
-    //     maxAge: 1000 * 60 * 60 * 24 * 10
-    // })
-  }
+  const handleChange = (e: any) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
 
   return (
     <div className="h-screen flex flex-col flex-1 items-center justify-center bg-blue-50 font-sans">
-      <form action={handleForm} className="flex flex-col gap-3 bg-white p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4">
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        signup(form as any);
+      }} className="flex flex-col gap-3 bg-white p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4">
         <h1 className="font-bold text-3xl mb-4">Sign up</h1>
         {/* Username */}
         <div className="flex flex-col">
@@ -75,12 +43,13 @@ export default function SignUpForm() {
           <input
             type="text"
             placeholder="Enter your Name"
-            name="username"
+            name="name"
             className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717]"
             required
+            onChange={handleChange}
           />
         </div>
-        
+
         {/* Email */}
         <div className="flex flex-col">
           <label className="text-[#151717] font-semibold text-sm">Email</label>
@@ -97,7 +66,8 @@ export default function SignUpForm() {
             placeholder="Enter your Email"
             name="email"
             className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717]"
-          required
+            required
+            onChange={handleChange}
           />
         </div>
 
@@ -119,7 +89,8 @@ export default function SignUpForm() {
             placeholder="Enter your Password"
             name="password"
             className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717]"
-          required
+            required
+            onChange={handleChange}
           />
 
           <button type="button" onClick={togglePasswordVisibility}>
@@ -139,9 +110,6 @@ export default function SignUpForm() {
             <input type="checkbox" className="h-4 w-4 accent-blue-500" />
             <label>Remember me</label>
           </div>
-          <span className="text-blue-500 font-medium cursor-pointer">
-            Forgot password?
-          </span>
         </div>
 
         {/* Submit */}

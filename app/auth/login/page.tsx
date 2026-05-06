@@ -2,17 +2,33 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { login } from "@/app/lib/actions";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleChange = (e: any) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
+
   return (
     <div className="h-screen flex flex-col flex-1 items-center justify-center bg-blue-50 font-sans">
-      <form className="flex flex-col gap-3 bg-white p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4">
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        login(form as any);
+      }} className="flex flex-col gap-3 bg-white p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4">
         <h1 className="font-bold text-3xl mb-4">Login</h1>
+
         {/* Email */}
         <div className="flex flex-col">
           <label className="text-[#151717] font-semibold text-sm">Email</label>
@@ -25,9 +41,12 @@ export default function LoginForm() {
             width={20}
             height={20} />
           <input
-            type="text"
+            type="email"
             placeholder="Enter your Email"
+            name="email"
             className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717]"
+            required
+            onChange={handleChange}
           />
         </div>
 
@@ -47,7 +66,10 @@ export default function LoginForm() {
             id="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your Password"
+            name="password"
             className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717]"
+            required
+            onChange={handleChange}
           />
 
           <button type="button" onClick={togglePasswordVisibility}>
@@ -81,7 +103,7 @@ export default function LoginForm() {
         <p className="text-center text-sm">
           Don't have an account?{" "}
           <Link href="/auth/signup" className="text-blue-500 font-medium cursor-pointer">
-            Sign Up
+            Signup
           </Link>
         </p>
       </form>

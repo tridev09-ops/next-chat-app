@@ -1,8 +1,17 @@
+import { useEffect } from "react";
+import getConversations from "../lib/getConversation";
 import Form from "../ui/form";
 import Messages from "../ui/messages";
 import Link from "next/link";
 
 export default function ConversationPage() {
+  useEffect(() => {
+    const data = getConversations();
+    if (data) {
+      console.log(data);
+    }
+  }, [])
+
   return (
     <div className="flex flex-1 flex-col h-full bg-secondary">
       <div className="flex flex-1 flex-col bg-slate-100">
