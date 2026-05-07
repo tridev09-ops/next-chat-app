@@ -7,21 +7,26 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function signup(form: any) {
+export type ActionResponse = {
+  success: boolean;
+  message?: string;
+  error?: string;
+};
+
+export async function signup(form: any): Promise<ActionResponse> {
   const name = form.name as string;
   const email = form.email as string;
   const password = form.password as string;
 
-  // ✅ Basic validation
   if (!name || !email || !password) {
-    throw new Error("All fields are required");
+    return { success: false, error: "All fields are required" };
   }
 
-  connectDB();
+  await connectDB();
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    throw new Error("User already exists");
+    return { success: false, error: "User already exists" };
   }
 
   // ✅ Hash password
@@ -41,35 +46,35 @@ export async function signup(form: any) {
   );
 
   // ✅ Set cookie
-  (await
-    // ✅ Set cookie
-    cookies()).set("token", token, {
+  const cookieStore = await cookies();
+  cookieStore.set("token", token, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
+    path: "/",
   });
 
-  redirect("/users");
+  return { success: true, message: "Signup successful" };
 }
 
-export async function login(form: any) {
+export async function login(form: any): Promise<ActionResponse> {
   const email = form.email as string;
   const password = form.password as string;
 
   if (!email || !password) {
-    throw new Error("All fields are required");
+    return { success: false, error: "All fields are required" };
   }
 
-  connectDB();
+  await connectDB();
 
   const user = await User.findOne({ email });
   if (!user) {
-    throw new Error("User not found");
+    return { success: false, error: "User not found" };
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw new Error("Invalid password");
+    return { success: false, error: "Invalid password" };
   }
 
   const token = jwt.sign(
@@ -78,20 +83,24 @@ export async function login(form: any) {
     { expiresIn: "7d" }
   );
 
-  (await cookies()).set("token", token, {
+  const cookieStore = await cookies();
+  cookieStore.set("token", token, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
+    path: "/",
   });
 
-  redirect("/users");
+  return { success: true, message: "Login successful" };
 }
 
 export async function logout() {
-  (await cookies()).set("token", "", {
+  const cookieStore = await cookies();
+  cookieStore.set("token", "", {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
+    path: "/",
     maxAge: 0,
   });
   redirect("/auth/login");

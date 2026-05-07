@@ -2,14 +2,20 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { login } from "@/app/lib/actions";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -21,13 +27,28 @@ export default function LoginForm() {
     });
   };
 
+  const handleSubmit=async (e:any) => {
+        e.preventDefault();
+        setLoading(true);
+        setError("");
+        setSuccess("");
+        const res = await login(form as any);
+        setLoading(false);
+        if (res.success) {
+          setSuccess(res.message || "Login successful!");
+          router.push("/users");
+        } else {
+          setError(res.error || "Something went wrong");
+        }
+      }
+
   return (
     <div className="h-screen flex flex-col flex-1 items-center justify-center bg-blue-50 font-sans">
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        login(form as any);
-      }} className="flex flex-col gap-3 bg-white p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-white p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4">
         <h1 className="font-bold text-3xl mb-4">Login</h1>
+
+        {error && <p className="text-red-500 text-sm bg-red-50 p-2 rounded border border-red-200">{error}</p>}
+        {success && <p className="text-green-500 text-sm bg-green-50 p-2 rounded border border-green-200">{success}</p>}
 
         {/* Email */}
         <div className="flex flex-col">
@@ -95,8 +116,10 @@ export default function LoginForm() {
         </div>
 
         {/* Submit */}
-        <button className="mt-5 mb-2 bg-[#151717] text-white text-sm font-medium rounded-lg h-12.5 w-full hover:bg-[#252727] transition">
-          Login
+        <button 
+          disabled={loading}
+          className="mt-5 mb-2 bg-[#151717] text-white text-sm font-medium rounded-lg h-12.5 w-full hover:bg-[#252727] transition disabled:opacity-50">
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         {/* Footer */}

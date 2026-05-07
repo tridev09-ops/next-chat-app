@@ -1,6 +1,8 @@
 import Message from "./message";
 
 export default function Messages() {
+  const [messages, setMessages] = useState();
+  
   return (
     <div className="flex flex-1 flex-col h-20">
       <Message message="Message 2" sender="me"/>

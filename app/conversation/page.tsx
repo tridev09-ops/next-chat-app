@@ -1,18 +1,11 @@
-import { useEffect } from "react";
 import getConversations from "../lib/getConversation";
 import Form from "../ui/form";
 import Messages from "../ui/messages";
 import Link from "next/link";
+import { getCurrentUser } from "../lib/auth";
 
-export default function ConversationPage() {
-  useEffect(() => {
-    const data = getConversations();
-    if (data) {
-      console.log(data);
-    }
-  }, [])
-
-  return (
+export default async function ConversationPage() {
+    return (
     <div className="flex flex-1 flex-col h-full bg-secondary">
       <div className="flex flex-1 flex-col bg-slate-100">
         <div className="flex items-center w-full h-14 bg-white border-b-2">
