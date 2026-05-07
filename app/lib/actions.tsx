@@ -6,6 +6,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Conversation from "./db/models/conversationModel";
+import Message from "./db/models/messageModel";
 
 export type ActionResponse = {
   success: boolean;
@@ -29,7 +31,7 @@ export async function signup(form: any): Promise<ActionResponse> {
     return { success: false, error: "User already exists" };
   }
 
-  // ✅ Hash password
+  // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
@@ -38,14 +40,14 @@ export async function signup(form: any): Promise<ActionResponse> {
     password: hashedPassword,
   });
 
-  // ✅ Create JWT
+  // Create JWT
   const token = jwt.sign(
     { userId: user._id },
     process.env.JWT_SECRET!,
     { expiresIn: "7d" }
   );
 
-  // ✅ Set cookie
+  // Set cookie
   const cookieStore = await cookies();
   cookieStore.set("token", token, {
     httpOnly: true,
@@ -104,4 +106,29 @@ export async function logout() {
     maxAge: 0,
   });
   redirect("/auth/login");
+}
+
+export async function sendMessage(form: any): Promise<ActionResponse> {
+  const conversationId = form.conversationId as string;
+  const message = form.message as string;
+  const sender = form.sender as string;
+
+  if (!conversationId || !message || !sender) {
+    return { success: false, error: "All fields are required" };
+  }
+
+  await connectDB();
+
+  let conversation = await Conversation.findOne({ _id: conversationId });
+  if (!conversation) {
+    const newConversation = await Conversation.create({
+      participants: [sender, conversation.participants.find((participant: any) => participant !== sender) as string],
+      messages: [],
+    });
+    conversation = await Conversation.findById(newConversation._id).populate('messages');
+  } else {
+    conversation = await Conversation.findByIdAndUpdate(conversationId, { $push: { messages: message } }, { new: true }).populate('messages');
+  }
+
+  return { success: true, message: "Message sent successfully" };
 }

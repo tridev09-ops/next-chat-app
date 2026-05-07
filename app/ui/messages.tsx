@@ -1,16 +1,25 @@
+import { getConversationMessages } from "../lib/getConversation";
 import Message from "./message";
 
-export default function Messages() {
-  const [messages, setMessages] = useState();
-  
+export default async function Messages({
+  conversationId,
+}: {
+  conversationId?: string;
+}) {
+  const messages = conversationId
+    ? await getConversationMessages(conversationId)
+    : [];
+
   return (
     <div className="flex flex-1 flex-col h-20">
-      <Message message="Message 2" sender="me"/>
-      <Message message="Message 3" sender="other"/>
-      <Message message="Message 4" sender="me"/>
-      <Message message="Message 5" sender="other"/>
-      <Message message="Message 6" sender="me"/>
-      <Message message="Message 7" sender="other"/>
+      {messages.length === 0 ? (
+        <div className="flex flex-1 flex-col h-20 items-center justify-center">
+          <p className="text-gray-500 dark:text-gray-400">No messages found</p>
+        </div>
+      ) : (
+      messages?.map((message: any) => (
+        <Message key={message._id} message={message.message} sender={message.sender} timeStamp={message.createdAt}/>
+      )))}
     </div>
   );
 }

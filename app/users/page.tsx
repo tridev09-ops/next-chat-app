@@ -19,20 +19,20 @@ export default async function UsersPage() {
   const users = usersData || [];
 
   return (
-    <div className="flex flex-1 flex-col bg-gray-100 h-screen items-center justify-center">
+    <div className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-900 h-screen items-center justify-center text-gray-900 dark:text-gray-100">
       <form action={logout}>
-        <button className="float-right self-end p-4 bg-gray-800 text-white rounded-md m-2">Logout</button>
+        <button className="float-right self-end p-4 bg-gray-800 dark:bg-gray-700 text-white rounded-md m-2">Logout</button>
       </form>
 
-      <div className="w-full h-screen bg-gray-100 p-4 flex flex-col gap-6 overflow-y-auto">
-        <h2>Conversations</h2>
+      <div className="w-full h-screen bg-gray-100 dark:bg-slate-900 p-4 flex flex-col gap-6 overflow-y-auto">
+        <h2 className="text-lg font-semibold">Conversations</h2>
         <div className="flex flex-col gap-2">
           {conversations.map((conv: any) => {
             return <User key={conv._id} name={conv.name || "Conversation"} email={conv.email || ""} />;
           })}
         </div>
         
-        <h2>Users</h2>
+        <h2 className="text-lg font-semibold">Users</h2>
         <div className="flex flex-col gap-2">
           {users.map((user: any) => {
             return <User key={user._id} name={user.name} email={user.email} />;

@@ -43,8 +43,8 @@ export default function LoginForm() {
       }
 
   return (
-    <div className="h-screen flex flex-col flex-1 items-center justify-center bg-blue-50 font-sans">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-white p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4">
+    <div className="h-screen flex flex-col flex-1 items-center justify-center bg-blue-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 font-sans">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-white dark:bg-slate-800 p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4 border border-gray-200 dark:border-slate-700">
         <h1 className="font-bold text-3xl mb-4">Login</h1>
 
         {error && <p className="text-red-500 text-sm bg-red-50 p-2 rounded border border-red-200">{error}</p>}
@@ -52,10 +52,10 @@ export default function LoginForm() {
 
         {/* Email */}
         <div className="flex flex-col">
-          <label className="text-[#151717] font-semibold text-sm">Email</label>
+          <label className="text-[#151717] dark:text-gray-100 font-semibold text-sm">Email</label>
         </div>
 
-        <div className="flex items-center border-2 border-[#ecedec] rounded-lg h-12.5 pl-2 focus-within:border-blue-500 transition">
+        <div className="flex items-center border-2 border-[#ecedec] dark:border-slate-600 rounded-lg h-12.5 pl-2 focus-within:border-blue-500 transition bg-white dark:bg-slate-700">
           <Image
             src="/icons/email.png"
             alt="Email Icon"
@@ -65,7 +65,7 @@ export default function LoginForm() {
             type="email"
             placeholder="Enter your Email"
             name="email"
-            className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717]"
+            className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717] dark:text-gray-100 bg-transparent"
             required
             onChange={handleChange}
           />
@@ -73,10 +73,10 @@ export default function LoginForm() {
 
         {/* Password */}
         <div className="flex flex-col">
-          <label className="text-[#151717] font-semibold text-sm">Password</label>
+          <label className="text-[#151717] dark:text-gray-100 font-semibold text-sm">Password</label>
         </div>
 
-        <div className="flex items-center border-2 border-[#ecedec] rounded-lg h-12.5 pl-2 focus-within:border-blue-500 transition">
+        <div className="flex items-center border-2 border-[#ecedec] dark:border-slate-600 rounded-lg h-12.5 pl-2 focus-within:border-blue-500 transition bg-white dark:bg-slate-700">
           <Image
             src="/icons/password.png"
             alt="password Icon"
@@ -88,7 +88,7 @@ export default function LoginForm() {
             type={showPassword ? "text" : "password"}
             placeholder="Enter your Password"
             name="password"
-            className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717]"
+            className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717] dark:text-gray-100 bg-transparent"
             required
             onChange={handleChange}
           />
@@ -123,7 +123,7 @@ export default function LoginForm() {
         </button>
 
         {/* Footer */}
-        <p className="text-center text-sm">
+        <p className="text-center text-sm text-gray-700 dark:text-gray-300">
           Don't have an account?{" "}
           <Link href="/auth/signup" className="text-blue-500 font-medium cursor-pointer">
             Signup
