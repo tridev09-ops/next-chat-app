@@ -1,5 +1,6 @@
 'use server';
 
+import mongoose from "mongoose";
 import connectDB from "./db/db";
 import User from "./db/models/userModel";
 import bcrypt from "bcryptjs";

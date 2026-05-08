@@ -1,5 +1,7 @@
 import { getConversationMessages } from "../lib/getConversation";
 import Message from "./message";
+import { getDate } from "../lib/extractTimestamp";
+import React from "react";
 
 export default async function Messages({
   conversationId,
@@ -12,6 +14,8 @@ export default async function Messages({
     ? await getConversationMessages(conversationId)
     : [];
 
+  let lastDate = "";
+
   return (
     <div className="flex flex-1 flex-col h-20">
       {messages.length === 0 ? (
@@ -19,14 +23,27 @@ export default async function Messages({
           <p className="text-gray-500 dark:text-gray-400">No messages found</p>
         </div>
       ) : (
-      messages?.map((message: any) => (
-        <Message 
-          key={message._id} 
-          message={message.message} 
-          sender={message.sender === currentUserId ? 'me' : 'other'} 
-          timeStamp={message.createdAt}
-        />
-      )))}
+        messages.map((message: any) => {
+          const currentDate = getDate(message.createdAt);
+          const showHeader = currentDate !== lastDate;
+          lastDate = currentDate;
+
+          return (
+            <React.Fragment key={message._id}>
+              {showHeader && (
+                <p className="text-center my-4 text-sm text-gray-500">
+                  {currentDate}
+                </p>
+              )}
+              <Message
+                message={message.message}
+                sender={message.sender === currentUserId ? "me" : "other"}
+                timeStamp={message.createdAt}
+              />
+            </React.Fragment>
+          );
+        })
+      )}
     </div>
   );
 }
