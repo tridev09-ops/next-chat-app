@@ -3,8 +3,10 @@ import Message from "./message";
 
 export default async function Messages({
   conversationId,
+  currentUserId,
 }: {
   conversationId?: string;
+  currentUserId?: string;
 }) {
   const messages = conversationId
     ? await getConversationMessages(conversationId)
@@ -18,7 +20,12 @@ export default async function Messages({
         </div>
       ) : (
       messages?.map((message: any) => (
-        <Message key={message._id} message={message.message} sender={message.sender} timeStamp={message.createdAt}/>
+        <Message 
+          key={message._id} 
+          message={message.message} 
+          sender={message.sender === currentUserId ? 'me' : 'other'} 
+          timeStamp={message.createdAt}
+        />
       )))}
     </div>
   );

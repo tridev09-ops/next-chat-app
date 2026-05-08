@@ -8,8 +8,8 @@ export default async function getConversations(userId: string) {
     try {
         const conversations = await Conversation.find({
             participants: userId
-        }).populate('messages');
-        
+        }).populate('participants');
+
         return conversations;
     } catch (error) {
         console.error("Error fetching conversations:", error);

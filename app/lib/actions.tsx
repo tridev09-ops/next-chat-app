@@ -6,8 +6,10 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import Conversation from "./db/models/conversationModel";
 import Message from "./db/models/messageModel";
+import { getCurrentUser } from "./auth";
 
 export type ActionResponse = {
   success: boolean;
@@ -108,27 +110,73 @@ export async function logout() {
   redirect("/auth/login");
 }
 
+export async function createConversation(receiverId: string): Promise<string | null> {
+  const senderId = await getCurrentUser();
+  if (!senderId) return null;
+
+  await connectDB();
+
+  try {
+    // Check if conversation already exists
+    const existing = await Conversation.findOne({
+      participants: { $all: [senderId, receiverId] }
+    });
+
+    if (existing) {
+      return existing._id.toString();
+    }
+
+    const newConversation = await Conversation.create({
+      participants: [senderId, receiverId],
+      messages: [],
+    });
+
+    revalidatePath("/users");
+    return newConversation._id.toString();
+  } catch (error) {
+    console.error("Error creating conversation:", error);
+    return null;
+  }
+}
+
 export async function sendMessage(form: any): Promise<ActionResponse> {
   const conversationId = form.conversationId as string;
-  const message = form.message as string;
-  const sender = form.sender as string;
+  const messageText = form.message as string;
+  const senderId = form.sender as string;
 
-  if (!conversationId || !message || !sender) {
+  if (!conversationId || !messageText || !senderId) {
     return { success: false, error: "All fields are required" };
   }
 
   await connectDB();
 
-  let conversation = await Conversation.findOne({ _id: conversationId });
-  if (!conversation) {
-    const newConversation = await Conversation.create({
-      participants: [sender, conversation.participants.find((participant: any) => participant !== sender) as string],
-      messages: [],
-    });
-    conversation = await Conversation.findById(newConversation._id).populate('messages');
-  } else {
-    conversation = await Conversation.findByIdAndUpdate(conversationId, { $push: { messages: message } }, { new: true }).populate('messages');
-  }
+  try {
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return { success: false, error: "Conversation not found" };
+    }
 
-  return { success: true, message: "Message sent successfully" };
+    const receiverId = conversation.participants.find((p: string) => p !== senderId);
+
+    if (!receiverId) {
+      return { success: false, error: "Receiver not found" };
+    }
+
+    const newMessage = await Message.create({
+      sender: senderId,
+      receiver: receiverId,
+      message: messageText,
+    });
+
+    await Conversation.findByIdAndUpdate(conversationId, {
+      $push: { messages: newMessage._id }
+    });
+
+    revalidatePath("/conversation");
+
+    return { success: true, message: "Message sent successfully" };
+  } catch (error) {
+    console.error("Error sending message:", error);
+    return { success: false, error: "Failed to send message" };
+  }
 }

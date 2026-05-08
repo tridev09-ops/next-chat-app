@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export default async function UsersPage() {
   const userId = await getCurrentUser();
-  
+
   if (!userId) {
     redirect("/auth/login");
   }
@@ -28,14 +28,31 @@ export default async function UsersPage() {
         <h2 className="text-lg font-semibold">Conversations</h2>
         <div className="flex flex-col gap-2">
           {conversations.map((conv: any) => {
-            return <User key={conv._id} name={conv.name || "Conversation"} email={conv.email || ""} />;
+            return conv.participants
+              .filter((part: any) => part._id.toString() !== userId)
+              .map((part: any) => {
+                return <User key={part._id} name={part.name} email={part.email} conversationId={conv._id.toString()} />;
+              });
           })}
         </div>
-        
+
         <h2 className="text-lg font-semibold">Users</h2>
         <div className="flex flex-col gap-2">
-          {users.map((user: any) => {
-            return <User key={user._id} name={user.name} email={user.email} />;
+          {users.filter((u: any) => u._id.toString() !== userId).map((user: any) => {
+            // Find conversation with this user
+            const existingConv = conversations.find((conv: any) =>
+              conv.participants.some((p: any) => p._id.toString() === user._id.toString())
+            );
+
+            return (
+              <User
+                key={user._id}
+                name={user.name}
+                email={user.email}
+                conversationId={existingConv ? existingConv._id.toString() : ""}
+                userId={user._id.toString()}
+              />
+            );
           })}
         </div>
       </div>

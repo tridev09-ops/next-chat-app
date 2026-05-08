@@ -1,16 +1,15 @@
 import mongoose from 'mongoose';
 
 const ConversationSchema = new mongoose.Schema({
-    participants: {
-        type: Array,
-        required: true,
-    },
-    messages: {
-        type: [mongoose.Schema.Types.ObjectId],
+    participants: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    messages: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Message',
-        required: true,
-    },
-});
+    }],
+}, { timestamps: true });
 
 const Conversation = mongoose.models.Conversation || mongoose.model('Conversation', ConversationSchema);
 
