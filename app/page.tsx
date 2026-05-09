@@ -1,9 +1,10 @@
 import User from "@/ui/user";
 import { logout } from "@/lib/actions";
-import fetchUsers from "@/routes/userFuncton";
-import {fetchConversations} from "@/routes/conversationFunction";
+import {fetchUsers, getUserById } from "@/routes/userFuncton";
+import { fetchConversations } from "@/routes/conversationFunction";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import SocketManager from "@/ui/SocketManager";
 
 export default async function UsersPage() {
   const userId = await getCurrentUser();
@@ -18,8 +19,12 @@ export default async function UsersPage() {
   const conversations = conversationsData || [];
   const users = usersData || [];
 
+  const user = await getUserById(userId as string);
+  const name = user?.name || "Anonymous";
+
   return (
     <div className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-900 h-screen items-center justify-center text-gray-900 dark:text-gray-100">
+      <SocketManager name={name} />
       <form action={logout}>
         <button className="float-right self-end p-4 bg-gray-800 dark:bg-gray-700 text-white rounded-md m-2">Logout</button>
       </form>

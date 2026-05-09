@@ -1,5 +1,39 @@
 import { Server } from "socket.io";
-import { sendMessage } from '@/routes/messageFunction'
+import connectDb from "./db/db.ts";
+import Conversation from "./db/models/conversationModel.ts";
+import Message from "./db/models/messageModel.ts";
+
+const persistMessage = async (messageObj: {
+    conversationId: string;
+    sender: string;
+    message: string;
+}) => {
+    if (!messageObj.conversationId || !messageObj.sender || !messageObj.message) {
+        return;
+    }
+
+    await connectDb();
+
+    const conversation = await Conversation.findById(messageObj.conversationId);
+    if (!conversation) {
+        return;
+    }
+
+    const receiverId = conversation.participants.find((p: string) => p.toString() !== messageObj.sender);
+    if (!receiverId) {
+        return;
+    }
+
+    const newMessage = await Message.create({
+        sender: messageObj.sender,
+        receiver: receiverId.toString(),
+        message: messageObj.message,
+    });
+
+    await Conversation.findByIdAndUpdate(messageObj.conversationId, {
+        $push: { messages: newMessage._id }
+    });
+};
 
 const initSocket = (server: any) => {
     // Attach socket.io to the server
@@ -19,6 +53,9 @@ const initSocket = (server: any) => {
                     name: username,
                     id: socket.id
                 })
+
+                console.log("User added and his name is: ", username)
+                console.log("User Map: ", userMap)
             })
 
         // Listen for events
@@ -38,11 +75,13 @@ const initSocket = (server: any) => {
                 io.to(receiverId!).emit("chat message",
                     messageObj);
 
-                // Save message to database
-                sendMessage({
+                // Save message to database without Next server action APIs.
+                persistMessage({
                     conversationId: messageObj.conversationId,
                     sender: messageObj.sender,
                     message: messageObj.message
+                }).catch((error) => {
+                    console.error("Error saving message:", error);
                 });
             });
 
