@@ -1,8 +1,8 @@
-import getConversations from "../lib/getConversation";
-import Form from "../ui/form";
-import Messages from "../ui/messages";
+import { fetchConversations } from "@/routes/conversationFunction";
+import Form from "@/ui/form";
+import Messages from "@/ui/messages";
 import Link from "next/link";
-import { getCurrentUser } from "../lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
 export default async function ConversationPage({
   searchParams,

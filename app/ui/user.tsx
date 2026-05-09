@@ -1,7 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { createConversation } from "../lib/actions";
+import { createConversation } from "@/routes/conversationFunction";
 
 export default function User({
     name,

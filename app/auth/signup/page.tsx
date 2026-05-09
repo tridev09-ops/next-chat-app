@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signup } from "@/app/lib/actions";
+import { signup } from "@/lib/actions";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function SignUpForm() {
         setLoading(false);
         if (res.success) {
           setSuccess(res.message || "Account created successfully!");
-          router.push("/users");
+          router.push("/");
         } else {
           setError(res.error || "Something went wrong");
         }

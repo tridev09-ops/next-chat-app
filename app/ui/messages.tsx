@@ -1,6 +1,6 @@
-import { getConversationMessages } from "../lib/getConversation";
+import { fetchMessages } from "@/routes/messageFunction";
 import Message from "./message";
-import { getDate } from "../lib/extractTimestamp";
+import { getDate } from "@/lib/extractTimestamp";
 import React from "react";
 
 export default async function Messages({
@@ -11,7 +11,7 @@ export default async function Messages({
   currentUserId?: string;
 }) {
   const messages = conversationId
-    ? await getConversationMessages(conversationId)
+    ? await fetchMessages(conversationId)
     : [];
 
   let lastDate = "";

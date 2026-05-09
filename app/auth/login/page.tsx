@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { login } from "@/app/lib/actions";
+import { login } from "@/lib/actions";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -36,7 +36,7 @@ export default function LoginForm() {
         setLoading(false);
         if (res.success) {
           setSuccess(res.message || "Login successful!");
-          router.push("/users");
+          router.push("/");
         } else {
           setError(res.error || "Something went wrong");
         }

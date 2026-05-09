@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react";
-import { sendMessage } from "../lib/actions";
+import { sendMessage } from "@/routes/messageFunction";
 
 export default function Form({ conversationId, sender }: { conversationId?: string, sender?: string }) {
     const [form, setForm] = useState({
