@@ -1,12 +1,14 @@
 'use client'
 import { useState } from "react";
 import { sendMessage } from "@/routes/messageFunction";
+import socket from "@/lib/socketClient";
 
-export default function Form({ conversationId, sender }: { conversationId?: string, sender?: string }) {
+export default function Form({ conversationId, sender,receiverName }: { conversationId?: string, sender?: string ,receiverName?:string}) {
     const [form, setForm] = useState({
         conversationId: conversationId || "",
         message: "",
         sender: sender || "",
+        receiverName: receiverName || "",
     });
     const handleChange = (e: any) => {
         setForm({
@@ -19,7 +21,7 @@ export default function Form({ conversationId, sender }: { conversationId?: stri
         e.preventDefault();
         if (!form.message.trim()) return;
         
-        await sendMessage(form);
+        socket.emit('chat message', form);
         setForm({
             ...form,
             message: ""

@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Conversation from "./db/models/conversationModel";
 import Message from "./db/models/messageModel";
-import { getCurrentUser } from "./auth";
+import { getCurrentUserId } from "./auth";
 
 export type ActionResponse = {
   success: boolean;

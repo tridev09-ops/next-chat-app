@@ -1,11 +1,11 @@
 "use server";
 import Conversation from "@/lib/db/models/conversationModel";
 import connectDB from "@/lib/db/db";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUserId } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function createConversation(receiverId: string): Promise<string | null> {
-  const senderId = await getCurrentUser();
+  const senderId = await getCurrentUserId();
   if (!senderId) return null;
 
   await connectDB();

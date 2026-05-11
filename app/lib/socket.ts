@@ -2,8 +2,9 @@ import { Server } from "socket.io";
 import connectDb from "./db/db.ts";
 import Conversation from "./db/models/conversationModel.ts";
 import Message from "./db/models/messageModel.ts";
+//import { sendMessage } from "../routes/messageFunction";
 
-const persistMessage = async (messageObj: {
+const sendMessage = async (messageObj: {
     conversationId: string;
     sender: string;
     message: string;
@@ -66,7 +67,7 @@ const initSocket = (server: any) => {
                 // Extracting socket id of receiver
                 let receiverId
                 userMap.forEach((user, i) => {
-                    if (user.name == messageObj.receiver) {
+                    if (user.name == messageObj.receiverName) {
                         receiverId = user.id
                     }
                 })
@@ -76,7 +77,7 @@ const initSocket = (server: any) => {
                     messageObj);
 
                 // Save message to database without Next server action APIs.
-                persistMessage({
+                sendMessage({
                     conversationId: messageObj.conversationId,
                     sender: messageObj.sender,
                     message: messageObj.message

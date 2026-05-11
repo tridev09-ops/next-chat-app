@@ -13,3 +13,4 @@ export async function getUserById(id:string){
     const data = await User.findById(id).select('-password');
     return data;
 }
+

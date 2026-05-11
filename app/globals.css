@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #f7a915;
   --surface: #f3f4f6;
   --surface-elevated: #ffffff;
   --border: #e5e7eb;
@@ -18,8 +18,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0b0f14;
-    --foreground: #e5e7eb;
-    --surface: #111827;
+    --foreground: #f7a915;
+    --surface: #f5f4ed;
     --surface-elevated: #1f2937;
     --border: #374151;
   }

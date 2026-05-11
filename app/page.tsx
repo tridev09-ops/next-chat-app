@@ -2,12 +2,12 @@ import User from "@/ui/user";
 import { logout } from "@/lib/actions";
 import {fetchUsers, getUserById } from "@/routes/userFuncton";
 import { fetchConversations } from "@/routes/conversationFunction";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUserId } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import SocketManager from "@/ui/SocketManager";
 
 export default async function UsersPage() {
-  const userId = await getCurrentUser();
+  const userId = await getCurrentUserId();
 
   if (!userId) {
     redirect("/auth/login");
@@ -36,7 +36,7 @@ export default async function UsersPage() {
             return conv.participants
               .filter((part: any) => part._id.toString() !== userId)
               .map((part: any) => {
-                return <User key={part._id} name={part.name} email={part.email} conversationId={conv._id.toString()} />;
+                return <User key={part._id} name={part.name} email={part.email} conversationId={conv._id.toString()} receiverName={part.name} />;
               });
           })}
         </div>
@@ -56,6 +56,7 @@ export default async function UsersPage() {
                 email={user.email}
                 conversationId={existingConv ? existingConv._id.toString() : ""}
                 userId={user._id.toString()}
+                receiverName={user.name}
               />
             );
           })}

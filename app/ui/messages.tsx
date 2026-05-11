@@ -2,6 +2,7 @@ import { fetchMessages } from "@/routes/messageFunction";
 import Message from "./message";
 import { getDate } from "@/lib/extractTimestamp";
 import React from "react";
+import socket from "@/lib/socketClient";
 
 export default async function Messages({
   conversationId,
@@ -15,6 +16,11 @@ export default async function Messages({
     : [];
 
   let lastDate = "";
+
+  socket.on("chat message", (message:any) => {
+    console.log(message);
+    messages.push(message);
+  });
 
   return (
     <div className="flex flex-1 flex-col h-20">

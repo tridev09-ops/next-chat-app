@@ -8,11 +8,13 @@ export default function User({
     email,
     conversationId,
     userId,
+    receiverName
 }: {
     name: string;
     email: string;
     conversationId?: string;
     userId?: string;
+    receiverName?: string;
 }) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
@@ -33,7 +35,7 @@ export default function User({
             }
 
             if (id) {
-                const newUrl = `/conversation?conversationId=${id}`;
+                const newUrl = `/conversation?conversationId=${id}&senderId=${userId}&receiverName=${receiverName}`;
                 router.push(newUrl);
             }
         });
