@@ -22,6 +22,7 @@ export async function signup(form: any): Promise<ActionResponse> {
   const name = form.name as string;
   const email = form.email as string;
   const password = form.password as string;
+  const emoji = form.emoji as string;
 
   if (!name || !email || !password) {
     return { success: false, error: "All fields are required" };
@@ -41,6 +42,7 @@ export async function signup(form: any): Promise<ActionResponse> {
     name,
     email,
     password: hashedPassword,
+    emoji,
   });
 
   // Create JWT

@@ -23,19 +23,19 @@ export default async function UsersPage() {
   const name = user?.name || "Anonymous";
 
   return (
-    <div className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-900 h-screen items-center justify-center text-gray-900 dark:text-gray-100">
+    <div className="flex flex-1 flex-col bg-surface-subtle h-screen items-center justify-center text-text-primary">
       <form action={logout}>
-        <button className="float-right self-end p-4 bg-gray-800 dark:bg-gray-700 text-white rounded-md m-2">Logout</button>
+        <button className="float-right self-end p-4 bg-accent text-white rounded-md m-2 hover:bg-accent-hover transition-colors">Logout</button>
       </form>
 
-      <div className="w-full h-screen bg-gray-100 dark:bg-slate-900 p-4 flex flex-col gap-6 overflow-y-auto">
+      <div className="w-full h-screen bg-surface-subtle p-4 flex flex-col gap-6 overflow-y-auto">
         <h2 className="text-lg font-semibold">Conversations</h2>
         <div className="flex flex-col gap-2">
           {conversations.map((conv: any) => {
             return conv.participants
               .filter((part: any) => part._id.toString() !== userId)
               .map((part: any) => {
-                return <User key={part._id} name={part.name} email={part.email} conversationId={conv._id.toString()} currentUserId={userId as string} receiverName={part.name} />;
+                return <User key={part._id} name={part.name} email={part.email} emoji={part.emoji} conversationId={conv._id.toString()} currentUserId={userId as string} receiverName={part.name} />;
               });
           })}
         </div>
@@ -53,6 +53,7 @@ export default async function UsersPage() {
                 key={user._id}
                 name={user.name}
                 email={user.email}
+                emoji={user.emoji}
                 conversationId={existingConv ? existingConv._id.toString() : ""}
                 userId={user._id.toString()}
                 currentUserId={userId as string}

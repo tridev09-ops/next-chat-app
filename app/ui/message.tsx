@@ -4,10 +4,10 @@ export default function Message({ message, sender, timeStamp }: { message: strin
   
   return (
     <div
-      className={`mx-4 my-2 p-4 w-fit max-w-[85%] rounded-lg ${sender === 'me' ? 'ml-auto bg-[#151717] text-white' : 'bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100'}`}
+      className={`mx-4 my-2 p-4 w-fit max-w-[85%] rounded-lg ${sender === 'me' ? 'ml-auto bg-accent text-white' : 'bg-surface text-text-primary'}`}
     >
       <div>{message}</div>
-      <span className={`text-xs ${sender === 'me' ? 'float-right mr-4 text-gray-300' : 'text-gray-500 dark:text-gray-300'}`}>
+      <span className={`text-xs ${sender === 'me' ? 'float-right mr-4 text-white/70' : 'text-text-secondary'}`}>
         {getTime(timeStamp)}
       </span>
     </div>

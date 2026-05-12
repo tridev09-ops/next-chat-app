@@ -3,9 +3,12 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { createConversation } from "@/routes/conversationFunction";
 
+import EmojiAvatar from "@/../components/EmojiAvatar";
+
 export default function User({
     name,
     email,
+    emoji,
     conversationId,
     userId,
     currentUserId,
@@ -13,6 +16,7 @@ export default function User({
 }: {
     name: string;
     email: string;
+    emoji?: string;
     conversationId?: string;
     userId?: string;
     currentUserId?: string;
@@ -37,7 +41,7 @@ export default function User({
             }
 
             if (id) {
-                const newUrl = `/conversation?conversationId=${id}&senderId=${currentUserId}&receiverName=${receiverName}`;
+                const newUrl = `/conversation?conversationId=${id}&senderId=${currentUserId}&receiverName=${receiverName}&receiverEmoji=${encodeURIComponent(emoji || "")}`;
                 router.push(newUrl);
             }
         });
@@ -47,25 +51,15 @@ export default function User({
         <button
             onClick={handleClick}
             disabled={isPending}
-            className="
-        bg-white dark:bg-slate-800 
-        text-gray-900 dark:text-gray-100 
-        p-4 
-        rounded-sm 
-        w-full 
-        border 
-        border-gray-200 
-        dark:border-slate-700
-        text-left
-        cursor-pointer
-        transition-colors
-        hover:bg-gray-50
-        dark:hover:bg-slate-700
-        disabled:opacity-50
-      "
+            className="bg-surface text-text-primary p-4 rounded-sm w-full border border-border text-left cursor-pointer transition-colors hover:bg-surface-hover disabled:opacity-50"
         >
-            {name}
-            <div className="text-sm text-gray-600 dark:text-gray-300">{email}</div>
+            <div className="flex items-center gap-3">
+              <EmojiAvatar emoji={emoji || "😀"} size="text-2xl" />
+              <div>
+                <div className="font-medium">{name}</div>
+                <div className="text-sm text-text-secondary">{email}</div>
+              </div>
+            </div>
         </button>
     );
 }   

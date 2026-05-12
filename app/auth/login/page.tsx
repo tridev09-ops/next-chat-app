@@ -43,8 +43,8 @@ export default function LoginForm() {
       }
 
   return (
-    <div className="h-screen flex flex-col flex-1 items-center justify-center bg-blue-50 dark:bg-slate-900 text-gray-900 dark:text-gray-100 font-sans">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-white dark:bg-slate-800 p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4 border border-gray-200 dark:border-slate-700">
+    <div className="h-screen flex flex-col flex-1 items-center justify-center bg-surface-subtle text-text-primary font-sans">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-surface p-8 w-full max-w-112.5 rounded-2xl font-sans mx-4 border border-border">
         <h1 className="font-bold text-3xl mb-4">Login</h1>
 
         {error && <p className="text-red-500 text-sm bg-red-50 p-2 rounded border border-red-200">{error}</p>}
@@ -52,10 +52,10 @@ export default function LoginForm() {
 
         {/* Email */}
         <div className="flex flex-col">
-          <label className="text-[#151717] dark:text-gray-100 font-semibold text-sm">Email</label>
+          <label className="text-text-primary font-semibold text-sm">Email</label>
         </div>
 
-        <div className="flex items-center border-2 border-[#ecedec] dark:border-slate-600 rounded-lg h-12.5 pl-2 focus-within:border-blue-500 transition bg-white dark:bg-slate-700">
+        <div className="flex items-center border-2 border-border rounded-lg h-12.5 pl-2 focus-within:border-accent transition bg-surface">
           <Image
             src="/icons/email.png"
             alt="Email Icon"
@@ -65,7 +65,7 @@ export default function LoginForm() {
             type="email"
             placeholder="Enter your Email"
             name="email"
-            className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717] dark:text-gray-100 bg-transparent"
+            className="ml-2 w-full h-full outline-none border-none rounded-lg text-text-primary bg-transparent"
             required
             onChange={handleChange}
           />
@@ -73,10 +73,10 @@ export default function LoginForm() {
 
         {/* Password */}
         <div className="flex flex-col">
-          <label className="text-[#151717] dark:text-gray-100 font-semibold text-sm">Password</label>
+          <label className="text-text-primary font-semibold text-sm">Password</label>
         </div>
 
-        <div className="flex items-center border-2 border-[#ecedec] dark:border-slate-600 rounded-lg h-12.5 pl-2 focus-within:border-blue-500 transition bg-white dark:bg-slate-700">
+        <div className="flex items-center border-2 border-border rounded-lg h-12.5 pl-2 focus-within:border-accent transition bg-surface">
           <Image
             src="/icons/password.png"
             alt="password Icon"
@@ -88,7 +88,7 @@ export default function LoginForm() {
             type={showPassword ? "text" : "password"}
             placeholder="Enter your Password"
             name="password"
-            className="ml-2 w-full h-full outline-none border-none rounded-lg text-[#151717] dark:text-gray-100 bg-transparent"
+            className="ml-2 w-full h-full outline-none border-none rounded-lg text-text-primary bg-transparent"
             required
             onChange={handleChange}
           />
@@ -107,25 +107,25 @@ export default function LoginForm() {
         {/* Remember + Forgot */}
         <div className="mt-8 flex justify-between items-center text-sm">
           <div className="flex items-center gap-2">
-            <input type="checkbox" className="h-4 w-4 accent-blue-500" />
+            <input type="checkbox" className="h-4 w-4 accent-accent" />
             <label>Remember me</label>
           </div>
-          <span className="text-blue-500 font-medium cursor-pointer">
+          <span className="text-accent font-medium cursor-pointer">
             Forgot password?
           </span>
         </div>
 
         {/* Submit */}
-        <button 
+        <button
           disabled={loading}
-          className="mt-5 mb-2 bg-[#151717] text-white text-sm font-medium rounded-lg h-12.5 w-full hover:bg-[#252727] transition disabled:opacity-50">
+          className="mt-5 mb-2 bg-accent text-white text-sm font-medium rounded-lg h-12.5 w-full hover:bg-accent-hover transition disabled:opacity-50">
           {loading ? "Logging in..." : "Login"}
         </button>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-700 dark:text-gray-300">
+        <p className="text-center text-sm text-text-secondary">
           Don't have an account?{" "}
-          <Link href="/auth/signup" className="text-blue-500 font-medium cursor-pointer">
+          <Link href="/auth/signup" className="text-accent font-medium cursor-pointer">
             Signup
           </Link>
         </p>

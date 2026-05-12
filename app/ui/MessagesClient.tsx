@@ -120,7 +120,7 @@ export default function MessagesClient({
     <div className="flex flex-1 flex-col h-20 overflow-y-auto">
       {messages.length === 0 ? (
         <div className="flex flex-1 flex-col h-20 items-center justify-center">
-          <p className="text-gray-500 dark:text-gray-400">No messages found</p>
+          <p className="text-text-secondary">No messages found</p>
         </div>
       ) : (
         messages.map((message) => {
@@ -131,7 +131,7 @@ export default function MessagesClient({
           return (
             <React.Fragment key={message._id}>
               {showHeader && (
-                <p className="text-center my-4 text-sm text-gray-500">
+                <p className="text-center my-4 text-sm text-text-secondary">
                   {currentDate}
                 </p>
               )}
