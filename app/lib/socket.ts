@@ -50,10 +50,15 @@ const initSocket = (server: any) => {
     io.on("connection", (socket) => {
         socket.on("set user",
             (username) => {
+                for (let i = userMap.length - 1; i >= 0; i--) {
+                    if (userMap[i].id === socket.id || userMap[i].name === username) {
+                        userMap.splice(i, 1);
+                    }
+                }
                 userMap.push({
                     name: username,
                     id: socket.id
-                })
+                });
 
                 console.log("User added and his name is: ", username)
                 console.log("User Map: ", userMap)
@@ -66,15 +71,16 @@ const initSocket = (server: any) => {
 
                 // Extracting socket id of receiver
                 let receiverId
-                userMap.forEach((user, i) => {
+                userMap.forEach((user) => {
                     if (user.name == messageObj.receiverName) {
                         receiverId = user.id
                     }
                 })
 
-                // Send to receiver
-                io.to(receiverId!).emit("chat message",
-                    messageObj);
+                if (receiverId) {
+                    io.to(receiverId).emit("chat message",
+                        messageObj);
+                }
 
                 // Save message to database without Next server action APIs.
                 sendMessage({

@@ -24,7 +24,6 @@ export default async function UsersPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-gray-100 dark:bg-slate-900 h-screen items-center justify-center text-gray-900 dark:text-gray-100">
-      <SocketManager name={name} />
       <form action={logout}>
         <button className="float-right self-end p-4 bg-gray-800 dark:bg-gray-700 text-white rounded-md m-2">Logout</button>
       </form>
@@ -36,7 +35,7 @@ export default async function UsersPage() {
             return conv.participants
               .filter((part: any) => part._id.toString() !== userId)
               .map((part: any) => {
-                return <User key={part._id} name={part.name} email={part.email} conversationId={conv._id.toString()} receiverName={part.name} />;
+                return <User key={part._id} name={part.name} email={part.email} conversationId={conv._id.toString()} currentUserId={userId as string} receiverName={part.name} />;
               });
           })}
         </div>
@@ -56,12 +55,14 @@ export default async function UsersPage() {
                 email={user.email}
                 conversationId={existingConv ? existingConv._id.toString() : ""}
                 userId={user._id.toString()}
+                currentUserId={userId as string}
                 receiverName={user.name}
               />
             );
           })}
         </div>
       </div>
+      <SocketManager name={name} />
     </div>
   );
 }

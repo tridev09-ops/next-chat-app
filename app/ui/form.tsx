@@ -1,6 +1,5 @@
 'use client'
 import { useState } from "react";
-import { sendMessage } from "@/routes/messageFunction";
 import socket from "@/lib/socketClient";
 
 export default function Form({ conversationId, sender,receiverName }: { conversationId?: string, sender?: string ,receiverName?:string}) {
@@ -10,7 +9,7 @@ export default function Form({ conversationId, sender,receiverName }: { conversa
         sender: sender || "",
         receiverName: receiverName || "",
     });
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
             message: e.target.value
@@ -19,9 +18,23 @@ export default function Form({ conversationId, sender,receiverName }: { conversa
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!form.message.trim()) return;
-        
-        socket.emit('chat message', form);
+        const message = form.message.trim();
+        if (!message) return;
+
+        const messageObj = {
+            ...form,
+            message,
+            clientMessageId: `local-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+            createdAt: new Date().toISOString(),
+        };
+
+        // Optimistic UI: render immediately before socket/db work.
+        window.dispatchEvent(
+            new CustomEvent("local:chat-message", {
+                detail: messageObj,
+            })
+        );
+        socket.emit('chat message', messageObj);
         setForm({
             ...form,
             message: ""
