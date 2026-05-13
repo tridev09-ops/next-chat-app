@@ -43,10 +43,15 @@ export default function Form({ conversationId, sender,receiverName }: { conversa
 
     return (
         <form onSubmit={handleSubmit} className="flex py-4 justify-center w-full bg-surface border-t-2 border-border">
-            <input type="text" name="message"   onChange={handleChange} value={form.message} className="flex-1 border-none outline-none py-4 px-4 text-lg bg-surface-hover text-text-primary rounded-full max-w-[750px]"
-                placeholder="Enter you message..."
+            <input type="text" name="message" onChange={handleChange} value={form.message} className="flex-1 border-none outline-none py-3 px-4 bg-surface-hover text-text-primary rounded-full max-w-[500px]"
+                placeholder="Enter your message..."
             />
-            <button type="submit" className="bg-accent hover:bg-accent-hover text-white px-4 mx-4 rounded-xl transition-colors">Send</button>
+            <button type="submit" className="bg-accent hover:bg-accent-hover text-white p-3 mx-4 rounded-xl transition-colors" title="Send">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="22" x2="11" y1="2" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+            </button>
         </form>
     );
 }

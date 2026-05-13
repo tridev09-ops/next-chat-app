@@ -1,6 +1,6 @@
 import UserList from "@/ui/UserList";
 import { logout } from "@/lib/actions";
-import { fetchUsers, getUserById } from "@/routes/userFuncton";
+import { fetchUsers, getUserById } from "@/routes/userFunction";
 import { fetchConversations } from "@/routes/conversationFunction";
 import { getCurrentUserId } from "@/lib/auth";
 import { redirect } from "next/navigation";

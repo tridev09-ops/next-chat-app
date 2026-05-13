@@ -3,7 +3,7 @@ import Messages from "@/ui/messages";
 import Link from "next/link";
 import { getCurrentUserId } from "@/lib/auth";
 import SocketManager from "@/ui/SocketManager";
-import { getUserById } from "@/routes/userFuncton";
+import { getUserById } from "@/routes/userFunction";
 
 export default async function ConversationPage({
   searchParams,
@@ -28,7 +28,7 @@ export default async function ConversationPage({
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
             </svg>
           </Link>
-          <h1 className="text-lg font-semibold ml-[28%] sm:ml-12 md:ml-[35%] lg:ml-[45%] text-center text-text-primary">{receiverEmoji && <span className="mr-2">{decodeURIComponent(receiverEmoji)}</span>}{receiverName || "Conversation"}</h1>
+          <h1 className="text-center text-lg font-semibold text-text-primary">{receiverEmoji && <span className="mr-2">{decodeURIComponent(receiverEmoji)}</span>}{receiverName || "Conversation"}</h1>
         </div>
         <Messages conversationId={conversationId} currentUserId={currentUserId} />
         <div className="shrink-0">

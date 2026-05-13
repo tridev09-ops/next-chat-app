@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import Search from "./search";
 import User from "./user";
 import { logout } from "@/lib/actions";
-import { fetchUsers } from "@/routes/userFuncton";
+import { fetchUsers } from "@/routes/userFunction";
 import { fetchConversations } from "@/routes/conversationFunction";
 
 export default function UserList({
@@ -72,8 +72,12 @@ export default function UserList({
             <div className="flex items-center justify-between px-4 py-3 bg-surface border-b border-border shrink-0">
                 <Search value={query} onChange={setQuery} />
                 <form action={logout}>
-                    <button className="px-4 py-2 text-sm font-medium text-text-secondary border border-border rounded-lg hover:bg-surface-hover hover:text-text-primary transition-colors">
-                        Logout
+                    <button className="p-2 text-text-secondary border border-border rounded-lg hover:bg-surface-hover hover:text-text-primary transition-colors" title="Logout">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" x2="9" y1="12" y2="12" />
+                        </svg>
                     </button>
                 </form>
             </div>
