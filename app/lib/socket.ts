@@ -2,7 +2,6 @@ import { Server } from "socket.io";
 import connectDb from "./db/db.ts";
 import Conversation from "./db/models/conversationModel.ts";
 import Message from "./db/models/messageModel.ts";
-//import { sendMessage } from "../routes/messageFunction";
 
 const sendMessage = async (messageObj: {
     conversationId: string;
@@ -37,71 +36,67 @@ const sendMessage = async (messageObj: {
 };
 
 const initSocket = (server: any) => {
-    // Attach socket.io to the server
     const io = new Server(server, {
         cors: {
-            origin: "*", // allow any origin (use your frontend URL in production)
+            origin: "*",
             methods: ["GET", "POST"]
         }
     });
-    const userMap: { name: string; id: string; }[] = []
 
-    // Handle socket.io connections
+    const userMap: { name: string; userId: string; socketId: string }[] = [];
+
+    const broadcastOnline = () => {
+        const onlineUserIds = userMap.map((u) => u.userId);
+        io.emit("users-online", onlineUserIds);
+    };
+
     io.on("connection", (socket) => {
-        socket.on("set user",
-            (username) => {
-                for (let i = userMap.length - 1; i >= 0; i--) {
-                    if (userMap[i].id === socket.id || userMap[i].name === username) {
-                        userMap.splice(i, 1);
-                    }
+        socket.on("set user", (data: { name: string; userId: string }) => {
+            for (let i = userMap.length - 1; i >= 0; i--) {
+                if (userMap[i].socketId === socket.id || userMap[i].name === data.name) {
+                    userMap.splice(i, 1);
                 }
-                userMap.push({
-                    name: username,
-                    id: socket.id
-                });
-
-                console.log("User added and his name is: ", username)
-                console.log("User Map: ", userMap)
-            })
-
-        // Listen for events
-        socket.on("chat message",
-            (messageObj) => {
-                console.log("Message:", messageObj.message);
-
-                // Extracting socket id of receiver
-                let receiverId
-                userMap.forEach((user) => {
-                    if (user.name == messageObj.receiverName) {
-                        receiverId = user.id
-                    }
-                })
-
-                if (receiverId) {
-                    io.to(receiverId).emit("chat message",
-                        messageObj);
-                }
-
-                // Save message to database without Next server action APIs.
-                sendMessage({
-                    conversationId: messageObj.conversationId,
-                    sender: messageObj.sender,
-                    message: messageObj.message
-                }).catch((error) => {
-                    console.error("Error saving message:", error);
-                });
+            }
+            userMap.push({
+                name: data.name,
+                userId: data.userId,
+                socketId: socket.id,
             });
 
-        // Handle disconnect
-        socket.on("disconnect",
-            () => {
-                userMap.forEach((user, i) => {
-                    if (user.id == socket.id) {
-                        userMap.splice(i, 1)
-                    }
-                })
+            console.log("User added:", data.name);
+            broadcastOnline();
+        });
+
+        socket.on("chat message", (messageObj) => {
+            let receiverSocketId: string | undefined;
+            userMap.forEach((user) => {
+                if (user.name === messageObj.receiverName) {
+                    receiverSocketId = user.socketId;
+                }
             });
+
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit("chat message", messageObj);
+            }
+
+            sendMessage({
+                conversationId: messageObj.conversationId,
+                sender: messageObj.sender,
+                message: messageObj.message,
+            }).catch((error) => {
+                console.error("Error saving message:", error);
+            });
+        });
+
+        socket.on("disconnect", () => {
+            userMap.forEach((user, i) => {
+                if (user.socketId === socket.id) {
+                    userMap.splice(i, 1);
+                }
+            });
+            broadcastOnline();
+        });
     });
-}
+};
 
-export default initSocket
+export default initSocket;

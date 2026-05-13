@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import next from "next";
 import initSocket from "./app/lib/socket.ts";
 
-const dev = process.env.NODE_ENV !== "production";
+const dev = true;
 const hostname = "localhost";
 const port = 3000;
 

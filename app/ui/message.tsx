@@ -1,4 +1,4 @@
-import { getTime } from "../lib/extractTimestamp"
+import { getTime } from "@/lib/extractTimestamp"
 
 export default function Message({ message, sender, timeStamp }: { message: string, sender: 'me' | 'other', timeStamp: string }) {
   
